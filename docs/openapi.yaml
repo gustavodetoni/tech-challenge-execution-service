@@ -1,0 +1,25 @@
+openapi: 3.0.3
+info:
+  title: Execution Service
+  version: 1.0.0
+  description: Fila e execução operacional das ordens de serviço.
+servers:
+  - url: http://localhost:8083
+paths:
+  /health:
+    get: {summary: Healthcheck, responses: {"200": {description: OK}}}
+  /executions/{orderID}/start:
+    post:
+      summary: Inicia execução de uma OS
+      parameters: [{name: orderID, in: path, required: true, schema: {type: string, format: uuid}}]
+      responses: {"202": {description: Execução iniciada}, "500": {description: Falha ao iniciar}}
+  /executions/{orderID}/finish:
+    post:
+      summary: Finaliza execução e publica evento
+      parameters: [{name: orderID, in: path, required: true, schema: {type: string, format: uuid}}]
+      responses: {"200": {description: Execução finalizada}, "404": {description: Não encontrada}}
+  /executions/{orderID}:
+    get:
+      summary: Consulta execução
+      parameters: [{name: orderID, in: path, required: true, schema: {type: string, format: uuid}}]
+      responses: {"200": {description: Execução encontrada}, "404": {description: Não encontrada}}
