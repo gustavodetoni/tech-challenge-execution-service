@@ -59,6 +59,7 @@ func main() {
 	mux.HandleFunc("GET /health", app.health)
 	mux.HandleFunc("POST /executions/{orderID}/start", app.start)
 	mux.HandleFunc("POST /executions/{orderID}/finish", app.finish)
+	mux.HandleFunc("POST /executions/{orderID}/fail", app.fail)
 	mux.HandleFunc("GET /executions/{orderID}", app.get)
 	logger.Info("execution service started", "port", env("PORT", "8083"))
 	_ = http.ListenAndServe(":"+env("PORT", "8083"), withCorrelation(mux))
@@ -88,6 +89,17 @@ func (a *App) finish(w http.ResponseWriter, r *http.Request) {
 	}
 	a.publish(Event{ID: uuid.NewString(), Type: "ServiceOrderExecutionCompleted", OrderID: id, OccurredAt: now})
 	jsonResponse(w, 200, map[string]string{"order_id": id, "status": "FINISHED"})
+}
+func (a *App) fail(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("orderID")
+	now := time.Now().UTC()
+	result, err := a.collection.UpdateOne(r.Context(), bson.M{"order_id": id}, bson.M{"$set": bson.M{"status": "FAILED", "updated_at": now}})
+	if err != nil || result.MatchedCount == 0 {
+		jsonResponse(w, 404, map[string]string{"error": "execution not found"})
+		return
+	}
+	a.publish(Event{ID: uuid.NewString(), Type: "ExecutionFailed", OrderID: id, OccurredAt: now, Data: map[string]string{"reason": "repair could not be started"}})
+	jsonResponse(w, 200, map[string]string{"order_id": id, "status": "FAILED"})
 }
 func (a *App) get(w http.ResponseWriter, r *http.Request) {
 	var e Execution

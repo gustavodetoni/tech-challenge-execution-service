@@ -28,7 +28,7 @@ func TestValidateExecutionOrder(t *testing.T) {
 }
 
 func TestEventForStatus(t *testing.T) {
-	cases := map[string]string{"IN_PROGRESS": "ExecutionStarted", "FINISHED": "ServiceOrderExecutionCompleted", "CANCELED": "ExecutionCanceled", "QUEUED": "ExecutionQueued"}
+	cases := map[string]string{"IN_PROGRESS": "ExecutionStarted", "FINISHED": "ServiceOrderExecutionCompleted", "CANCELED": "ExecutionCanceled", "FAILED": "ExecutionFailed", "QUEUED": "ExecutionQueued"}
 	for status, want := range cases {
 		if got := application.EventForStatus(status); got != want {
 			t.Errorf("%s: got %s want %s", status, got, want)
