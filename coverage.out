@@ -6,8 +6,9 @@ github.com/gustavodetoni/tech-challenge-execution-service/internal/application/e
 github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:16.51,17.19 1 2
 github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:17.19,19.3 1 1
 github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:20.2,20.12 1 1
-github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:23.43,24.16 1 4
+github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:23.43,24.16 1 5
 github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:25.21,26.28 1 1
 github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:27.18,28.42 1 1
 github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:29.18,30.29 1 1
-github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:31.10,32.27 1 1
+github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:31.16,32.27 1 1
+github.com/gustavodetoni/tech-challenge-execution-service/internal/application/execution.go:33.10,34.27 1 1

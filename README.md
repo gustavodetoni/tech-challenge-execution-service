@@ -10,6 +10,7 @@ O serviço consome a confirmação de pagamento, inicia a execução, registra o
 
 - `POST /executions/{orderID}/start`
 - `POST /executions/{orderID}/finish`
+- `POST /executions/{orderID}/fail` — registra falha e publica `ExecutionFailed`.
 - `GET /executions/{orderID}`
 - `GET /health`
 
@@ -31,6 +32,15 @@ Configuração: `PORT`, `MONGODB_URL`, `MONGODB_DATABASE` e `RABBITMQ_URL`.
 - Consome `billing.PaymentConfirmed` na fila `execution-service-payments`.
 - Publica `execution.ExecutionStarted`.
 - Publica `execution.ServiceOrderExecutionCompleted`.
+- Publica `execution.ExecutionFailed`; o OS Service cancela a OS e solicita estorno ao Billing Service.
+
+### Tratamento de falha
+
+```bash
+curl -X POST http://localhost:8083/executions/ORDER_ID/fail
+```
+
+Esse endpoint publica `ExecutionFailed`. O OS Service marca a OS como `CANCELED` e publica `PaymentRefundRequested`, iniciando a compensação do pagamento no Billing Service.
 
 ## Execução local
 
@@ -47,6 +57,18 @@ docker compose -f ../tech-challenge-project/docker-compose.phase4.yml up --build
 - `deploy.yml`: publicação da imagem e rollout no Kubernetes.
 - Healthchecks e labels Datadog estão previstos nos manifests de infraestrutura.
 
-## Cobertura e pendências
+## Testes e cobertura
 
-Os testes ficam em [tests](tests) e cobrem 100% do pacote `internal/application`, acima do mínimo de 80% nesse escopo. Ainda faltam testes de integração com MongoDB/RabbitMQ, histórico completo de diagnóstico, fila persistente, retry/DLQ e armazenamento durável com PVC/StatefulSet no Kubernetes.
+Os testes unitários ficam em [tests](tests).
+
+```bash
+make tests
+```
+
+Cobertura atual:
+
+```text
+internal/application: 100%
+```
+
+O CI exige no mínimo 80% do pacote de regras de negócio e cobre transições da execução, eventos publicados, validação da OS e o evento de falha.

@@ -18,6 +18,11 @@ paths:
       summary: Finaliza execução e publica evento
       parameters: [{name: orderID, in: path, required: true, schema: {type: string, format: uuid}}]
       responses: {"200": {description: Execução finalizada}, "404": {description: Não encontrada}}
+  /executions/{orderID}/fail:
+    post:
+      summary: Registra falha e inicia compensação da Saga
+      parameters: [{name: orderID, in: path, required: true, schema: {type: string, format: uuid}}]
+      responses: {"200": {description: Falha registrada}, "404": {description: Não encontrada}}
   /executions/{orderID}:
     get:
       summary: Consulta execução

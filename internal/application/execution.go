@@ -28,6 +28,8 @@ func EventForStatus(status string) string {
 		return "ServiceOrderExecutionCompleted"
 	case "CANCELED":
 		return "ExecutionCanceled"
+	case "FAILED":
+		return "ExecutionFailed"
 	default:
 		return "ExecutionQueued"
 	}
